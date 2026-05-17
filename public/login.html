@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Acceso - Weather App</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <!-- Login Form -->
+        <div id="login-box" class="glass-card">
+            <h2>Bienvenido</h2>
+            <form id="login-form" action="/login" method="POST">
+                <div class="input-group">
+                    <label for="login-username">Usuario / Email</label>
+                    <input type="text" id="login-username" name="username" required placeholder="Tu usuario">
+                </div>
+                <div class="input-group">
+                    <label for="login-password">Contraseña</label>
+                    <input type="password" id="login-password" name="password" required placeholder="••••••••">
+                </div>
+                <button type="submit" class="btn">Iniciar Sesión</button>
+                <p class="toggle-text">¿Nuevo por aquí? <a href="#" id="show-register">Regístrate ahora</a></p>
+                <div id="login-error" class="error-msg"></div>
+            </form>
+        </div>
+
+        <!-- Register Form (Absolute Overlay) -->
+        <div id="register-box" class="glass-card register-overlay" style="none" style="display: none;">
+            <h2>Crear Cuenta</h2>
+            <form id="register-form" action="/register" method="POST">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                    <div class="input-group">
+                        <label for="reg-nombre">Nombre</label>
+                        <input type="text" id="reg-nombre" name="nombre" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="reg-apellidos">Apellidos</label>
+                        <input type="text" id="reg-apellidos" name="apellidos">
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label for="reg-dni">DNI</label>
+                    <input type="text" id="reg-dni" name="dni" required>
+                </div>
+                <div class="input-group">
+                    <label for="reg-username">Usuario / Email</label>
+                    <input type="text" id="reg-username" name="username" required>
+                </div>
+                <div class="input-group">
+                    <label for="reg-password">Contraseña</label>
+                    <input type="password" id="reg-password" name="password" required>
+                </div>
+                <button type="submit" class="btn">Completar Registro</button>
+                <p class="toggle-text">¿Ya eres miembro? <a href="#" id="show-login">Identifícate</a></p>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.has('error')) {
+            const error = urlParams.get('error');
+            if (error === 'login_failed') {
+                $('#login-error').html('Credenciales inválidas. <a href="#" id="show-register-err" style="color:#ff4b2b">Regístrate</a> o reintenta.').show();
+            }
+        }
+
+        $(document).on('click', '#show-register, #show-register-err', function(e) {
+            e.preventDefault();
+            $('#login-box').fadeOut(300, function() {
+                $('#register-box').fadeIn(300);
+            });
+        });
+
+        $('#show-login').click(function(e) {
+            e.preventDefault();
+            $('#register-box').fadeOut(300, function() {
+                $('#login-box').fadeIn(300);
+            });
+        });
+    </script>
+</body>
+</html>

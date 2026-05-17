@@ -3,6 +3,7 @@ const session = require("express-session");
 const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
 const bcrypt = require("bcrypt");
+const path = require("path");
 
 const app = express();
 const PORT = 3000;
@@ -10,6 +11,7 @@ const PORT = 3000;
 // Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+app.use(express.static(path.join(__dirname, "public")));
 
 app.use(
   session({
@@ -66,51 +68,79 @@ function ensureAuthenticated(req, res, next) {
 // Routes
 app.get("/", (req, res) => {
   if (req.isAuthenticated()) {
-    res.send(
-      `<h1>Home</h1><p>Welcome back, ${req.user.username}!</p><a href="/profile">Profile</a> | <a href="/logout">Logout</a>`,
-    );
+    res.sendFile(path.join(__dirname, "public", "dashboard.html"));
   } else {
-    res.send(
-      '<h1>Home</h1><p>Please login</p><a href="/login">Login</a> | <a href="/register">Register</a>',
-    );
+    res.redirect("/login");
   }
 });
 
 app.get("/register", (req, res) => {
-  res.send(
-    '<h1>Register</h1><form action="/register" method="POST"><input type="text" name="username" placeholder="Username" required /><input type="password" name="password" placeholder="Password" required /><button type="submit">Register</button></form>',
-  );
+  res.sendFile(path.join(__dirname, "public", "login.html"));
 });
 
 app.post("/register", async (req, res) => {
   try {
-    const { username, password } = req.body;
+    const { username, password, nombre, apellidos, dni } = req.body;
+    if (!username || !password || !nombre || !dni) {
+      return res.redirect("/register?error=missing_fields");
+    }
+
     const hashedPassword = await bcrypt.hash(password, 10);
-    users.push({ username, password: hashedPassword });
+    users.push({ 
+      username, 
+      password: hashedPassword,
+      nombre,
+      apellidos,
+      dni,
+      favorites: [] 
+    });
     res.redirect("/login");
   } catch (err) {
-    res.redirect("/register");
+    res.redirect("/register?error=server_error");
   }
 });
 
 app.get("/login", (req, res) => {
-  res.send(
-    '<h1>Login</h1><form action="/login" method="POST"><input type="text" name="username" placeholder="Username" required /><input type="password" name="password" placeholder="Password" required /><button type="submit">Login</button></form>',
-  );
+  res.sendFile(path.join(__dirname, "public", "login.html"));
 });
 
 app.post(
   "/login",
   passport.authenticate("local", {
     successRedirect: "/",
-    failureRedirect: "/login",
+    failureRedirect: "/login?error=login_failed",
   }),
 );
 
-app.get("/profile", ensureAuthenticated, (req, res) => {
-  res.send(
-    `<h1>Profile</h1><p>Username: ${req.user.username}</p><a href="/">Home</a>`,
-  );
+// Favorites API
+app.get("/api/favorites", ensureAuthenticated, (req, res) => {
+  res.json(req.user.favorites || []);
+});
+
+app.post("/api/favorites", ensureAuthenticated, (req, res) => {
+  const { city } = req.body;
+  if (!city) return res.status(400).json({ error: "City required" });
+  
+  if (!req.user.favorites) req.user.favorites = [];
+  if (!req.user.favorites.includes(city)) {
+    req.user.favorites.push(city);
+  }
+  res.json(req.user.favorites);
+});
+
+app.delete("/api/favorites", ensureAuthenticated, (req, res) => {
+  const { city } = req.body;
+  if (!city) return res.status(400).json({ error: "City required" });
+  
+  if (req.user.favorites) {
+    req.user.favorites = req.user.favorites.filter(c => c !== city);
+  }
+  res.json(req.user.favorites);
+});
+
+app.get("/api/user", ensureAuthenticated, (req, res) => {
+    const { password, ...userWithoutPassword } = req.user;
+    res.json(userWithoutPassword);
 });
 
 app.get("/logout", (req, res, next) => {
