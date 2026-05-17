@@ -150,6 +150,12 @@ app.get("/logout", (req, res, next) => {
   });
 });
 
-app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
-});
+// IMPORTANTE: Cambia app.listen por esto
+if (process.env.NODE_ENV !== 'production') {
+  app.listen(PORT, () => {
+    console.log(`Server running on http://localhost:${PORT}`);
+  });
+}
+
+// Exportar para que Vercel lo use como Serverless Function
+module.exports = app;
