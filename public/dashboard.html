@@ -1,47 +1,49 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Dashboard - Weather App</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-</head>
+  </head>
 
-<body>
+  <body>
     <div class="container">
-        <div class="glass-card dashboard-card">
-            <header class="dash-header">
-                <div class="user-info">
-                    Hola, <span id="user-name">Usuario</span>
-                </div>
-                <a href="/logout" class="logout-link">Cerrar Sesión</a>
-            </header>
+      <div class="glass-card dashboard-card">
+        <header class="dash-header">
+          <div class="user-info">Hola, <span id="user-name">Usuario</span></div>
+          <a href="/logout" class="logout-link">Cerrar Sesión</a>
+        </header>
 
-            <main class="dash-content">
-                <section class="weather-section">
-                    <div class="search-box">
-                        <input type="text" id="city-input" placeholder="Buscar ciudad...">
-                        <button id="search-btn" class="btn btn-icon">🔍</button>
-                    </div>
+        <main class="dash-content">
+          <section class="weather-section">
+            <div class="search-box">
+              <input
+                type="text"
+                id="city-input"
+                placeholder="Buscar ciudad..."
+              />
+              <button id="search-btn" class="btn btn-icon">🔍</button>
+            </div>
 
-                    <div id="weather-display" class="weather-display">
-                        <p>Busca una ciudad para ver el tiempo</p>
-                    </div>
-                </section>
+            <div id="weather-display" class="weather-display">
+              <p>Busca una ciudad para ver el tiempo</p>
+            </div>
+          </section>
 
-                <section class="favorites-section">
-                    <h3>Ciudades Favoritas</h3>
-                    <ul id="favorites-list" class="favorites-list">
-                    </ul>
-                </section>
-            </main>
-        </div>
+          <section class="favorites-section">
+            <h3>Ciudades Favoritas</h3>
+            <ul id="favorites-list" class="favorites-list"></ul>
+          </section>
+        </main>
+      </div>
     </div>
 
     <script src="script.js"></script>
-</body>
-
+  </body>
 </html>
