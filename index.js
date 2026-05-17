@@ -8,7 +8,6 @@ const path = require("path");
 const app = express();
 const PORT = 3000;
 
-// Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, "public")));
@@ -24,10 +23,8 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
-// Mock User Database
 const users = [];
 
-// Passport Configuration
 passport.use(
   new LocalStrategy(async (username, password, done) => {
     try {
@@ -57,7 +54,6 @@ passport.deserializeUser((username, done) => {
   done(null, user);
 });
 
-// Auth Middleware
 function ensureAuthenticated(req, res, next) {
   if (req.isAuthenticated()) {
     return next();
@@ -65,7 +61,6 @@ function ensureAuthenticated(req, res, next) {
   res.redirect("/login");
 }
 
-// Routes
 app.get("/", (req, res) => {
   if (req.isAuthenticated()) {
     res.sendFile(path.join(__dirname, "public", "dashboard.html"));
@@ -86,13 +81,13 @@ app.post("/register", async (req, res) => {
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
-    users.push({
-      username,
+    users.push({ 
+      username, 
       password: hashedPassword,
       nombre,
       apellidos,
       dni,
-      favorites: [],
+      favorites: [] 
     });
     res.redirect("/login");
   } catch (err) {
@@ -112,7 +107,6 @@ app.post(
   }),
 );
 
-// Favorites API
 app.get("/api/favorites", ensureAuthenticated, (req, res) => {
   res.json(req.user.favorites || []);
 });
@@ -120,7 +114,7 @@ app.get("/api/favorites", ensureAuthenticated, (req, res) => {
 app.post("/api/favorites", ensureAuthenticated, (req, res) => {
   const { city } = req.body;
   if (!city) return res.status(400).json({ error: "City required" });
-
+  
   if (!req.user.favorites) req.user.favorites = [];
   if (!req.user.favorites.includes(city)) {
     req.user.favorites.push(city);
@@ -131,16 +125,16 @@ app.post("/api/favorites", ensureAuthenticated, (req, res) => {
 app.delete("/api/favorites", ensureAuthenticated, (req, res) => {
   const { city } = req.body;
   if (!city) return res.status(400).json({ error: "City required" });
-
+  
   if (req.user.favorites) {
-    req.user.favorites = req.user.favorites.filter((c) => c !== city);
+    req.user.favorites = req.user.favorites.filter(c => c !== city);
   }
   res.json(req.user.favorites);
 });
 
 app.get("/api/user", ensureAuthenticated, (req, res) => {
-  const { password, ...userWithoutPassword } = req.user;
-  res.json(userWithoutPassword);
+    const { password, ...userWithoutPassword } = req.user;
+    res.json(userWithoutPassword);
 });
 
 app.get("/logout", (req, res, next) => {
@@ -150,12 +144,6 @@ app.get("/logout", (req, res, next) => {
   });
 });
 
-// IMPORTANTE: Cambia app.listen por esto
-if (process.env.NODE_ENV !== 'production') {
-  app.listen(PORT, () => {
-    console.log(`Server running on http://localhost:${PORT}`);
-  });
-}
-
-// Exportar para que Vercel lo use como Serverless Function
-module.exports = app;
+app.listen(PORT, () => {
+  console.log(`Server running on http://localhost:${PORT}`);
+});

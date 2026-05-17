@@ -39,7 +39,6 @@ body {
   align-items: center;
 }
 
-/* Glassmorphism Card */
 .glass-card {
   background: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(15px);
@@ -67,7 +66,7 @@ body {
   transform: translate(-50%, -50%);
   width: 110%;
   z-index: 10;
-  background: rgba(255, 255, 255, 0.15); /* Slightly more opaque */
+  background: rgba(255, 255, 255, 0.15);
 }
 
 h2 {
@@ -149,7 +148,6 @@ h2 {
   display: none;
 }
 
-/* Dashboard Specifics */
 .dash-header {
   display: flex;
   justify-content: space-between;
@@ -284,7 +282,6 @@ h2 {
   color: #ffd700;
 }
 
-/* Custom Scrollbar */
 ::-webkit-scrollbar {
   width: 6px;
 }

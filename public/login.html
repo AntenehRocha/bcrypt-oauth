@@ -12,7 +12,6 @@
 
 <body>
     <div class="container">
-        <!-- Login Form -->
         <div id="login-box" class="glass-card">
             <h2>Bienvenido</h2>
             <form id="login-form" action="/login" method="POST">
@@ -32,7 +31,6 @@
             </form>
         </div>
 
-        <!-- Register Form (Absolute Overlay) -->
         <div id="register-box" class="glass-card register-overlay" style="display: none">
             <h2>Crear Cuenta</h2>
             <form id="register-form" action="/register" method="POST">
@@ -70,7 +68,6 @@
     <script>
         const urlParams = new URLSearchParams(window.location.search);
         
-        // Handle Errors
         if (urlParams.has("error")) {
             const error = urlParams.get("error");
             
@@ -81,7 +78,6 @@
                     )
                     .show();
             } else if (error === "missing_fields" || error === "server_error") {
-                // Show register box if registration failed
                 $("#login-box").hide();
                 $("#register-box").show();
                 $("#register-error")
