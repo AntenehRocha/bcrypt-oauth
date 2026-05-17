@@ -86,13 +86,13 @@ app.post("/register", async (req, res) => {
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
-    users.push({ 
-      username, 
+    users.push({
+      username,
       password: hashedPassword,
       nombre,
       apellidos,
       dni,
-      favorites: [] 
+      favorites: [],
     });
     res.redirect("/login");
   } catch (err) {
@@ -120,7 +120,7 @@ app.get("/api/favorites", ensureAuthenticated, (req, res) => {
 app.post("/api/favorites", ensureAuthenticated, (req, res) => {
   const { city } = req.body;
   if (!city) return res.status(400).json({ error: "City required" });
-  
+
   if (!req.user.favorites) req.user.favorites = [];
   if (!req.user.favorites.includes(city)) {
     req.user.favorites.push(city);
@@ -131,16 +131,16 @@ app.post("/api/favorites", ensureAuthenticated, (req, res) => {
 app.delete("/api/favorites", ensureAuthenticated, (req, res) => {
   const { city } = req.body;
   if (!city) return res.status(400).json({ error: "City required" });
-  
+
   if (req.user.favorites) {
-    req.user.favorites = req.user.favorites.filter(c => c !== city);
+    req.user.favorites = req.user.favorites.filter((c) => c !== city);
   }
   res.json(req.user.favorites);
 });
 
 app.get("/api/user", ensureAuthenticated, (req, res) => {
-    const { password, ...userWithoutPassword } = req.user;
-    res.json(userWithoutPassword);
+  const { password, ...userWithoutPassword } = req.user;
+  res.json(userWithoutPassword);
 });
 
 app.get("/logout", (req, res, next) => {
