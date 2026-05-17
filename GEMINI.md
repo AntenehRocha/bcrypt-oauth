@@ -1,13 +1,14 @@
 # GEMINI.md
 
 ## Project Overview
-This project, `prueba-1-bcrypt`, is a Node.js-based environment for practicing password hashing and authentication using `bcrypt`. It demonstrates how to securely hash passwords and verify them against plain-text inputs. The project also includes dependencies for `express` and `passport`, indicating potential for expansion into a full web application with authentication.
+This project, `prueba-1-bcrypt`, is a Node.js-based environment for practicing password hashing and authentication using `bcrypt`. It has evolved from a simple demo script into a functional web application with authentication.
 
 ### Main Technologies
 - **Node.js**: The runtime environment.
 - **bcrypt**: Used for password hashing and verification.
-- **Express**: (Dependency) A web framework for Node.js.
-- **Passport**: (Dependency) Authentication middleware for Node.js.
+- **Express**: Web framework for the authentication server.
+- **Passport & Passport-Local**: Middleware for handling user authentication.
+- **Express-Session**: Used for session management.
 
 ## Building and Running
 
@@ -19,25 +20,35 @@ This project, `prueba-1-bcrypt`, is a Node.js-based environment for practicing p
 npm install
 ```
 
-### Running the Demo Script
-The project includes a script named `playground.js` that demonstrates the core bcrypt functionality (loading a password, hashing it, and comparing it).
+### Running the Application
+The main application is now an Express server in `index.js`.
+```bash
+node index.js
+```
+The server will start on `http://localhost:3000`.
+
+### Running the Legacy Demo Script
+The original `playground.js` script is still available for demonstrating core bcrypt functionality.
 ```bash
 node playground.js
 ```
 
 ### Testing
-Currently, no specific tests are defined.
+Currently, no automated tests are defined.
 ```bash
 npm test
 ```
 
 ## Project Structure
 - `package.json`: Contains project metadata and dependencies.
-- `playground.js`: The main entry point for demonstrating bcrypt usage.
-- `contraseña-text-plano.txt`: A sample text file containing a plain-text password used by `playground.js`.
+- `index.js`: The main Express server with authentication logic.
+- `playground.js`: A standalone script for bcrypt practice.
+- `contraseña-text-plano.txt`: A sample text file used by `playground.js`.
 
 ## Development Conventions
 - **Module System**: Uses **CommonJS** (`require`).
-- **Asynchronous Code**: Uses **async/await** for file operations and bcrypt functions.
-- **Coding Style**: Follows standard JavaScript practices for small Node.js projects.
-- **Security**: Focuses on password hashing best practices using a salt round of 10 (as seen in `playground.js`).
+- **Asynchronous Code**: Uses **async/await** for file operations, bcrypt hashing, and database lookups.
+- **Security**:
+  - Passwords are never stored in plain text; they are hashed with a salt round of 10.
+  - Authentication is managed via `passport-local`.
+  - Routes like `/profile` are protected using `ensureAuthenticated` middleware.
