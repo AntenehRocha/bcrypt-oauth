@@ -33,7 +33,7 @@
         </div>
 
         <!-- Register Form (Absolute Overlay) -->
-        <div id="register-box" class="glass-card register-overlay" style="none" style="display: none">
+        <div id="register-box" class="glass-card register-overlay" style="display: none">
             <h2>Crear Cuenta</h2>
             <form id="register-form" action="/register" method="POST">
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem">
@@ -62,19 +62,30 @@
                 <p class="toggle-text">
                     ¿Ya eres miembro? <a href="#" id="show-login">Identifícate</a>
                 </p>
+                <div id="register-error" class="error-msg"></div>
             </form>
         </div>
     </div>
 
     <script>
         const urlParams = new URLSearchParams(window.location.search);
+        
+        // Handle Errors
         if (urlParams.has("error")) {
             const error = urlParams.get("error");
+            
             if (error === "login_failed") {
                 $("#login-error")
                     .html(
                         'Credenciales inválidas. <a href="#" id="show-register-err" style="color:#ff4b2b">Regístrate</a> o reintenta.',
                     )
+                    .show();
+            } else if (error === "missing_fields" || error === "server_error") {
+                // Show register box if registration failed
+                $("#login-box").hide();
+                $("#register-box").show();
+                $("#register-error")
+                    .text(error === "missing_fields" ? "Por favor, rellena todos los campos obligatorios." : "Error en el servidor. Inténtalo más tarde.")
                     .show();
             }
         }
